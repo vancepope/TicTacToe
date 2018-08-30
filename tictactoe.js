@@ -12,22 +12,15 @@
 								"#3.COLOR, #6.COLOR, #9.COLOR", "#9.COLOR, #6.COLOR, #3.COLOR", "#6.COLOR, #9.COLOR, #3.COLOR", "#3.COLOR, #9.COLOR, #6.COLOR",
 								"#1.COLOR, #5.COLOR, #9.COLOR", "#9.COLOR, #5.COLOR, #1.COLOR", "#5.COLOR, #9.COLOR, #1.COLOR", "#1.COLOR, #9.COLOR, #5.COLOR",
 								"#3.COLOR, #5.COLOR, #7.COLOR", "#7.COLOR, #5.COLOR, #3.COLOR", "#5.COLOR, #7.COLOR, #3.COLOR", "#3.COLOR, #7.COLOR, #5.COLOR",
-  								];
-		function onClick(){
-			playGame();
-		}
-		onClick();
-		
+  								];	
 		function playGame(){
 			var choice;
 			humansTurn(choice);
 		}
 		function humansTurn(choice){
 			humanPick(choice);			
-			return choice;
 		}
-		function humanPick(){		
-			var choice;
+		function humanPick(choice){		
 			$('.gridItem').click(function(event){
 					addHuman(event,choice);
 				});
@@ -78,15 +71,18 @@
   			var draw = ((fullGrid === 9) && (!humanWins && !cpuWins));
   			if (humanWins) {
     			humanWin();
-    			gameWinner.push("Human");
+				gameWinner.push("Human");
+				reset();
     			return humanWins;
   			} else if (cpuWins) {
     			cpuWin();
-    			gameWinner.push("CPU");
+				gameWinner.push("CPU");
+				reset();
     			return cpuWins;
   			} else if (draw) {
     			catsGame();
-    			gameWinner.push("Draw");
+				gameWinner.push("Draw");
+				reset();
     			return draw;
   			} else {
     			console.log('game on...');
@@ -134,12 +130,9 @@
 			}
 		function reset(){
 			$('#resetButton').click(function(){
-				$('.gridItem').removeClass("blue red gray notClickable");
-				$('.gridItem').html("");
-				$('#winningHeader').css("display","none");
-				$('#resetButton').css("display","none");
+				location.reload();
 			});
-			onClick();
+			
 		}
   		function addHuman(event, choice){
   			choice = '#' + event.currentTarget.id;
@@ -158,4 +151,5 @@
 					} else {	
 						// console.log(choice);
 					}
-  		}	
+		  }
+	playGame();	
