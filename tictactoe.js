@@ -1,8 +1,8 @@
 	var gameWinner = new Array();
 	var humanPickedArray = new Array();
 	var cpuPickedArray = new Array();
-	var cpuRepickArray = new Array();
 	var humanWinArray, cpuWinArray, resetButton;
+	var board = ['#1','#2','#3','#4','#5','#6','#7','#8','#9'];
 		var winningCombos = [
     							"#1.COLOR, #2.COLOR, #3.COLOR", "#3.COLOR, #2.COLOR, #1.COLOR", "#2.COLOR, #1.COLOR, #3.COLOR", "#1.COLOR, #3.COLOR, #2.COLOR",
 								"#4.COLOR, #5.COLOR, #6.COLOR", "#6.COLOR, #5.COLOR, #4.COLOR", "#5.COLOR, #4.COLOR, #6.COLOR", "#6.COLOR, #4.COLOR, #5.COLOR",
@@ -26,10 +26,12 @@
 				});
 		}
 		function cpusTurn(humanChoice){
-			var randomNum = Math.floor(Math.random() * 9 + 1)
-			var cpuChoice = '#' + randomNum;
-			if (humanChoice != cpuChoice && (humanPickedArray.includes(cpuChoice) == false && cpuPickedArray.includes(cpuChoice) == false)){
-				cpuPick(cpuChoice);
+			var randomNum = Math.floor(Math.random() * board.length);
+			var cpuChoice = board[randomNum];
+			if (humanChoice != cpuChoice && (!humanPickedArray.includes(cpuChoice) && !cpuPickedArray.includes(cpuChoice))){
+				cpuPick(randomNum, cpuChoice);
+				board.splice(board.indexOf(cpuChoice), 1);
+
 			} else {
 				cpuRepick(randomNum);
 			}
@@ -37,11 +39,12 @@
 		function cpuRepick(randomNum){
 			var cpuRepick;
 			var isTaken = true;
-				while(isTaken == true){
-					cpuRepick = '#' + randomNum;
-					cpuRepickArray.push(cpuRepick);
+				while(isTaken){
+					randomNum = Math.floor(Math.random() * board.length);
+					cpuRepick = board[randomNum];
 					if (!humanPickedArray.includes(cpuRepick) && !cpuPickedArray.includes(cpuRepick)){
 						cpuPickedArray.push(cpuRepick);
+						board.splice(board.indexOf(cpuRepick), 1);
 							$(cpuRepick).addClass("red");
 							$(cpuRepick).html("O");
 							console.log("CPUs repick was successful");
@@ -56,7 +59,7 @@
 					randomNum++;
 				}
 		}	
-		function cpuPick(cpuChoice){
+		function cpuPick(randomNum, cpuChoice){
 			cpuPickedArray.push(cpuChoice);
 			$(cpuChoice).addClass("red");
 			$(cpuChoice).html("O");
@@ -135,18 +138,20 @@
 			
 		}
   		function addHuman(event, choice){
+			  console.log(event);
   			choice = '#' + event.currentTarget.id;
-					if ((humanPickedArray.includes(choice) == false) && (cpuPickedArray.includes(choice) == false)){	
+					if (board.includes(choice)){	
 							if (gameWinner[0] === undefined){
 								$(choice).addClass("blue");
 								$(choice).html("X");
 								humanPickedArray.push(choice);
+								board.splice(board.indexOf(choice), 1);
 							} 
-							if (!gameWinner.includes("Human") || !gameWinner.includes("CPU") == false){
+							if (!gameWinner.includes("Human") || !gameWinner.includes("CPU")){
 								cpusTurn(choice);
 							}
 							decideWinner(gameWinner);
-					} else if (humanPickedArray.includes(choice) == true && cpuPickedArray.includes(choice) == true){
+					} else if (humanPickedArray.includes(choice) && cpuPickedArray.includes(choice)){
 							window.alert("Your choice has already been taken, please choose another.");
 					} else {	
 						// console.log(choice);
